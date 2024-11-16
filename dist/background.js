@@ -7,7 +7,13 @@ chrome.runtime.onInstalled.addListener(() => {
       id: "factCheck",
       title: "Fact Check Hello?",
       contexts: ["selection"]
-    }); 
+    });
+    // Create a context menu item for images
+    chrome.contextMenus.create({
+      id: "getImageLink",
+      title: "Get Image Link",
+      contexts: ["image"] // Only show for images
+    });
   });
 });
 
@@ -15,28 +21,13 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "factCheck" && info.selectionText) {
     // Store only the current selection when context menu is used
-    chrome.storage.local.set({ 
+    chrome.storage.local.set({
       lastHighlight: info.selectionText // Store only the current highlight
     }, () => {
       // Open the popup after storing
       chrome.action.openPopup();
     });
   }
-});
-
-// Optional: Clear lastHighlight when popup is closed
-chrome.runtime.onConnect.addListener((port) => {
-  if (port.name === "popup") {
-    port.onDisconnect.addListener(() => {
-      // Clear the last highlight when popup is closed
-      chrome.storage.local.remove('lastHighlight');
-    });
-  }
-});
-
-// Add a listener to handle when the context menu is clicked
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  console.log('clicked')
   if (info.menuItemId === "getImageLink" && info && info.srcUrl) {
     // Store only the current selection when context menu is used
     chrome.storage.local.set({
@@ -50,11 +41,13 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 
-// Optional: Clear last image when popup is closed
+// Optional: Clear lastHighlight when popup is closed
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name === "popup") {
     port.onDisconnect.addListener(() => {
       // Clear the last highlight when popup is closed
+      chrome.storage.local.remove('lastHighlight');
       chrome.storage.local.remove('imageUrl');
     });
   }
+});

@@ -9,9 +9,6 @@
     },
     "permissions": [
         "contextMenus",
-        "storage",
-        "activeTab"
-        "contextMenus",
         "activeTab",
         "scripting",
         "storage"
