@@ -85,12 +85,12 @@ const App: React.FC = () => {
         const cleanedInput = removeAsteriskContent(result);
         // Find the first word or phrase and clean it up by removing asterisks
         const firstWordFind = result.split(' ')[0].replace(/\*/g, "");
-        
+
         // Match to find only the valid words or phrases (e.g., true, untrue, etc.)
         const firstWord = firstWordFind.match(/^(true|untrue|unknown|probably true|probably false)/i);
-        
+
         // Set the `firstWord` state to the matched word or an empty string if not found
-        setFirstWord(firstWord ? firstWord[0] : "");        
+        setFirstWord(firstWord ? firstWord[0] : "");
         setFactCheckResult(cleanedInput);
         setCitations(citations);
         chrome.storage.local.set({ factCheckResult: result });
@@ -176,9 +176,6 @@ const App: React.FC = () => {
       }
 
       {selectedText && (
-        <div className="space-y-4">
-          <div className="p-3 bg-gray-100 rounded-lg">
-      {selectedText ? (
         <div className="space-y-4 w-full">
           <div className="p-10 bg-gray-100 rounded-lg">
             <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
@@ -190,22 +187,13 @@ const App: React.FC = () => {
               <p>Analyzing...</p>
             </div>
           ) : factCheckResult ? (
-            <div className={`p-3 rounded-lg ${firstWord.toLowerCase() === 'true' ? 'bg-green-100' :
+            <><p>{firstWord}</p><div className={`p-4 rounded-lg ${firstWord.toLowerCase() === 'true' ? 'bg-green-100' :
               firstWord.toLowerCase() === 'probably true' ? 'bg-green-50' :
                 firstWord.toLowerCase() === 'untrue' ? 'bg-red-100' :
                   firstWord.toLowerCase() === 'probably false' ? 'bg-red-50' :
                     firstWord.toLowerCase() === 'unknown' ? 'bg-yellow-50' :
                       firstWord.toLowerCase() === 'opinion' ? 'bg-purple-50' :
                         'bg-blue-50' // default fallback
-              }`}>
-              <p>{firstWord}</p>
-            <div className={`p-4 rounded-lg ${firstWord.toLowerCase() === 'true' ? 'bg-green-100' :
-                firstWord.toLowerCase() === 'probably true' ? 'bg-green-50' :
-                  firstWord.toLowerCase() === 'untrue' ? 'bg-red-100' :
-                    firstWord.toLowerCase() === 'probably false' ? 'bg-red-50' :
-                      firstWord.toLowerCase() === 'unknown' ? 'bg-yellow-50' :
-                        firstWord.toLowerCase() === 'opinion' ? 'bg-purple-50' :
-                          'bg-blue-50' // default fallback
               }`}>
 
 
@@ -224,7 +212,7 @@ const App: React.FC = () => {
                   ))}
                 </ol>
               </div>
-            </div>
+            </div></>
           ) : null}
         </div>
       )}
