@@ -207,25 +207,34 @@ const App: React.FC = () => {
       )}
       {
         image &&
-        <div>
+        <><div className="p-2 bg-gray-100 rounded-lg max-w-xs w-400 h-400">
           <h2 className="text-sm font-semibold mb-2">Checking Images:</h2>
-          <img src={image} alt="Selected" />
-        </div>
+          <img src={image} alt="Selected" className="max-w-full h-auto" />
+        </div></>
       }
+      <div className="mt-4"></div>
       {
         imageCheckResult && (
-          <div>
-            <h3>Image Check Result:</h3>
+          <div className={`p-3 rounded-lg ${imageCheckResult.type.ai_generated < 0.25 ? 'bg-green-500' : imageCheckResult.type.ai_generated > 0.75 ? 'bg-red-500' : 'bg-yellow-500'}`}>
             {isPending ? (
               <><ClipLoader color="#000" loading={isPending} size={35} /><p>Loading...</p></>
             ) : (
-              <pre>{imageCheckResult.type.ai_generated}</pre>
+              <><h1 className="text-black whitespace-pre-wrap text-2xl">
+                {imageCheckResult.type.ai_generated < 0.25 ? 'Human Made' :
+                  imageCheckResult.type.ai_generated > 0.75 ? 'AI Generated' :
+                    `Unknown (Score: ${imageCheckResult.type.ai_generated})`}
+              </h1>
+                <h2>
+                  {imageCheckResult.type.ai_generated < 0.25 ? ' This image appears to be human-made.' :
+                    imageCheckResult.type.ai_generated > 0.75 ? ' This image appears to be AI-generated.' :
+                      ' The authenticity of this image is unclear. Please review it carefully.'}
+                </h2></>
             )}
           </div>
         )
       }
     </div >
-  );
+  )
 };
 
 export default App;
