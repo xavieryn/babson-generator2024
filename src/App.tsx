@@ -82,9 +82,16 @@ const App: React.FC = () => {
       if (data.choices && data.choices.length > 0) {
         const result = data.choices[0].message.content;
         const citations = data.citations;
-        const firstWord = result.split(' ')[0];
-        setFirstWord(firstWord);
-        setFactCheckResult(result);
+        const cleanedInput = removeAsteriskContent(result);
+        // Find the first word or phrase and clean it up by removing asterisks
+        const firstWordFind = result.split(' ')[0].replace(/\*/g, "");
+        
+        // Match to find only the valid words or phrases (e.g., true, untrue, etc.)
+        const firstWord = firstWordFind.match(/^(true|untrue|unknown|probably true|probably false)/i);
+        
+        // Set the `firstWord` state to the matched word or an empty string if not found
+        setFirstWord(firstWord ? firstWord[0] : "");        
+        setFactCheckResult(cleanedInput);
         setCitations(citations);
         chrome.storage.local.set({ factCheckResult: result });
       } else {
@@ -153,15 +160,13 @@ const App: React.FC = () => {
     );
   }
 
+  function removeAsteriskContent(input: string): string {
+    // Remove content enclosed within double asterisks (**...**)
+    return input.replace(/\*\*.*?\*\*/g, "").trim();
+  }
   return (
-    <div className="p-4 min-w-[800px] min-h-[600px] max-w-[1000px] ">
+    <div className="p-6 mx-auto min-w-[800px] min-h-[600px] max-w-[1000px] flex items-center flex-col border border-gray-300 rounded-lg">
       <h1 className="text-xl font-bold mb-4">Fact Checker</h1>
-      {/* 
-  {error ? (
-    <div className="p-3 bg-red-100 text-red-700 rounded-lg mb-4">
-      Error: {error}
-    </div>
-  ) : null} */}
 
       {!selectedText && !image &&
         <p className="text-gray-500">
@@ -173,12 +178,15 @@ const App: React.FC = () => {
       {selectedText && (
         <div className="space-y-4">
           <div className="p-3 bg-gray-100 rounded-lg">
+      {selectedText ? (
+        <div className="space-y-4 w-full">
+          <div className="p-10 bg-gray-100 rounded-lg">
             <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
             <p className="text-gray-700">{selectedText}</p>
           </div>
 
           {isLoading ? (
-            <div className="p-3 bg-yellow-50 rounded-lg">
+            <div className="p-4 bg-yellow-50 rounded-lg">
               <p>Analyzing...</p>
             </div>
           ) : factCheckResult ? (
@@ -191,8 +199,20 @@ const App: React.FC = () => {
                         'bg-blue-50' // default fallback
               }`}>
               <p>{firstWord}</p>
+            <div className={`p-4 rounded-lg ${firstWord.toLowerCase() === 'true' ? 'bg-green-100' :
+                firstWord.toLowerCase() === 'probably true' ? 'bg-green-50' :
+                  firstWord.toLowerCase() === 'untrue' ? 'bg-red-100' :
+                    firstWord.toLowerCase() === 'probably false' ? 'bg-red-50' :
+                      firstWord.toLowerCase() === 'unknown' ? 'bg-yellow-50' :
+                        firstWord.toLowerCase() === 'opinion' ? 'bg-purple-50' :
+                          'bg-blue-50' // default fallback
+              }`}>
+
+
               <h2 className="text-sm font-semibold mb-2">Fact Check Result:</h2>
+              <p className=' font-bold'>{firstWord}</p>
               <p className="text-gray-700 whitespace-pre-wrap">{factCheckResult}</p>
+
 
               <div className="text-gray-700 whitespace-pre-wrap mt-4">
                 <h3 className="text-sm font-semibold mb-2">Citations:</h3>
@@ -234,9 +254,9 @@ const App: React.FC = () => {
                 </h2></>
             )}
           </div>
-        )
-      }
-    </div >
+        )}
+    </div>
+
   )
 };
 

@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(() => {
     // Create new context menu item
     chrome.contextMenus.create({
       id: "factCheck",
-      title: "Fact Check HelloDing",
+      title: "Fact Check!",
       contexts: ["selection"]
     });
     // Create a context menu item for images
