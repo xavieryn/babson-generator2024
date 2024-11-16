@@ -1,17 +1,17 @@
-import { checkImage, SightEngineResponse } from "./action";
+import { checkImage } from "./action";
 
 import { useState } from "react";
+import { SightEngineResponse } from "./type";
 
-
-const [imageCheckResult, setImageCheckResult] = useState<SightEngineResponse | null>(null);
-
-const handleClick = async () => {
-  const result = await checkImage();
-  if (result !== undefined) {
-    setImageCheckResult(result);
-  }
-};
 function App() {
+  const [imageCheckResult, setImageCheckResult] = useState<SightEngineResponse>();
+
+  const handleClick = async () => {
+    const result = await checkImage();
+    if (result !== undefined) {
+      setImageCheckResult(result);
+    }
+  };
   return (
     <div className="App">
       Hello World

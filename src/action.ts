@@ -1,24 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
+import { SightEngineResponse } from './type';
 
-export interface SightEngineResponse {
-    status: string;
-    request: {
-        id: string;
-        timestamp: number;
-        operations: number;
-    };
-    type: {
-        ai_generated: number;
-    };
-    media: {
-        id: string;
-        uri: string;
-    };
-}
 
 const apiUser = '527050385';
 const apiSecret = 'DpYFg6icij6tCWu9S4HZSJQjnfp3QBzq';
-const imageUrl = 'https://ichef.bbci.co.uk/news/640/cpsprodpb/c5a7/live/e96562b0-a41c-11ef-a4fe-a3e9a6c5d640.jpg.webp';
+const imageUrl = 'https://images.deepai.org/machine-learning-models/b6dcce965af54c26918924813f3cd288/cyborg.jpg';
 
 
 export async function checkImage() {
