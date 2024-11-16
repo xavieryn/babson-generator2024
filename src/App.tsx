@@ -95,15 +95,6 @@ const App: React.FC = () => {
       chrome.storage.local.set({ isLoading: false });
     }
   };
-      // Cleanup
-      return () => {
-        port.disconnect();
-        chrome.storage.local.onChanged.removeListener(handleStorageChange);
-      };
-    } else {
-      setIsLoading(false);
-    }
-  }, [isExtension]);
 
   const [imageCheckResult, setImageCheckResult] = useState<SightEngineResponse>();
   const [image, setImage] = useState("");
