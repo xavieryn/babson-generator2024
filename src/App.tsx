@@ -123,8 +123,11 @@ const App: React.FC = () => {
     if (image) {
       const checkImageUrl = async () => {
         const result = await checkImage(image);
-        if (result !== undefined) {
+        if (result !== undefined && typeof result !== 'string') {
           setImageCheckResult(result);
+        }
+        if(typeof result === 'string'){
+          return <div>Invalid Image Link</div>
         }
       };
       checkImageUrl();

@@ -9,6 +9,9 @@ const apiSecret = 'DpYFg6icij6tCWu9S4HZSJQjnfp3QBzq';
 
 export async function checkImage(imageUrl: string) {
     try {
+        if (imageUrl.startsWith('data:')) {
+            return ('Data encoded URLs are not supported.');
+        }
         const response: AxiosResponse<SightEngineResponse> = await axios.get('https://api.sightengine.com/1.0/check.json', {
             params: {
                 url: imageUrl,
@@ -21,5 +24,6 @@ export async function checkImage(imageUrl: string) {
         return response.data;
     } catch (error) {
         console.error('Error:', error);
+        return (error as Error).message;
     }
 }
