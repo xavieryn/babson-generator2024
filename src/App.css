@@ -2,3 +2,7 @@
   color: black;
   text-align: center;
 }
+.container {
+  max-width: 800px;
+
+}

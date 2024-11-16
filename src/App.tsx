@@ -115,7 +115,7 @@ const App: React.FC = () => {
 
       {selectedText ? (
         <div className="space-y-4 w-full">
-          <div className="p-4 bg-gray-100 rounded-lg">
+          <div className="p-10 bg-gray-100 rounded-lg">
             <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
             <p className="text-gray-700">{selectedText}</p>
           </div>
