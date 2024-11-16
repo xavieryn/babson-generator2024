@@ -9,12 +9,31 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (isExtension) {
-      chrome.storage.local.get(['selectedText'], (result) => {
-        if (result.selectedText) {
-          setSelectedText(result.selectedText);
+      // Connect to background script to handle popup lifecycle
+      const port = chrome.runtime.connect({ name: "popup" });
+
+      // Get the lastHighlight from storage
+      chrome.storage.local.get(['lastHighlight'], (result) => {
+        if (result.lastHighlight) {
+          setSelectedText(result.lastHighlight);
         }
         setIsLoading(false);
       });
+
+      // Listen for storage changes
+      const handleStorageChange = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+        if (changes.lastHighlight) {
+          setSelectedText(changes.lastHighlight.newValue);
+        }
+      };
+
+      chrome.storage.local.onChanged.addListener(handleStorageChange);
+
+      // Cleanup
+      return () => {
+        port.disconnect();
+        chrome.storage.local.onChanged.removeListener(handleStorageChange);
+      };
     } else {
       setIsLoading(false);
     }
@@ -63,10 +82,10 @@ const App: React.FC = () => {
         </p>
       )}
 
-      {/* Debug information - you can remove this later */}
-      <div className="mt-4 text-xs text-gray-500">
+      {/* Debug information */}
+      {/* <div className="mt-4 text-xs text-gray-500">
         Extension ID: {chrome?.runtime?.id || 'Not available'}
-      </div>
+      </div> */}
     </div>
   );
 };

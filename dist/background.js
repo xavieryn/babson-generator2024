@@ -5,9 +5,9 @@ chrome.runtime.onInstalled.addListener(() => {
     // Create new context menu item
     chrome.contextMenus.create({
       id: "factCheck",
-      title: "Fact Check Selection Penis",
+      title: "Fact Check Hello?",
       contexts: ["selection"]
-    });
+    }); 
   });
 });
 
