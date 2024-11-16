@@ -1,11 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .App {
   color: white;
   text-align: center;
 }
 
-.container {
-  width: 15rem;
-  height: 15rem;
-  background-color: green;
 
-}
