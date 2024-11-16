@@ -8,6 +8,7 @@ import { SightEngineResponse } from './type';
 const App: React.FC = () => {
   const [selectedText, setSelectedText] = useState<string>('');
   const [citations, setCitations] = useState<Array<string>>([]);
+  const [firstWord, setFirstWord] = useState<string>('');
   const [factCheckResult, setFactCheckResult] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition(); const [error, setError] = useState<string | null>(null);
@@ -80,7 +81,9 @@ const App: React.FC = () => {
       const data: ChatCompletion = await response.json();
       if (data.choices && data.choices.length > 0) {
         const result = data.choices[0].message.content;
-        const citations = data.citations
+        const citations = data.citations;
+        const firstWord = result.split(' ')[0];
+        setFirstWord(firstWord);
         setFactCheckResult(result);
         setCitations(citations);
         chrome.storage.local.set({ factCheckResult: result });
@@ -148,22 +151,60 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="p-4 min-w-[800px] min-h-[600px] max-w-[1000px]">
+    <div className="p-4 min-w-[800px] min-h-[600px] max-w-[1000px] ">
       <h1 className="text-xl font-bold mb-4">Fact Checker</h1>
+      {/* 
+  {error ? (
+    <div className="p-3 bg-red-100 text-red-700 rounded-lg mb-4">
+      Error: {error}
+    </div>
+  ) : null} */}
 
-      {error ? (
-        <div className="p-3 bg-red-100 text-red-700 rounded-lg mb-4">
-          Error: {error}
-        </div>
-      ) : null}
-
-      {(selectedText) ? (
+      {selectedText ? (
         <div className="space-y-4">
           <div className="p-3 bg-gray-100 rounded-lg">
             <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
             <p className="text-gray-700">{selectedText}</p>
           </div>
 
+          {isLoading ? (
+            <div className="p-3 bg-yellow-50 rounded-lg">
+              <p>Analyzing...</p>
+            </div>
+          ) : factCheckResult ? (
+            <div className={`p-3 rounded-lg ${
+              firstWord.toLowerCase() === 'true' ? 'bg-green-100' :
+              firstWord.toLowerCase() === 'probably true' ? 'bg-green-50' :
+              firstWord.toLowerCase() === 'untrue' ? 'bg-red-100' :
+              firstWord.toLowerCase() === 'probably false' ? 'bg-red-50' :
+              firstWord.toLowerCase() === 'unknown' ? 'bg-yellow-50' :
+              firstWord.toLowerCase() === 'opinion' ? 'bg-purple-50' :
+              'bg-blue-50' // default fallback
+            }`}>
+              <p>{firstWord}</p>
+              <h2 className="text-sm font-semibold mb-2">Fact Check Result:</h2>
+              <p className="text-gray-700 whitespace-pre-wrap">{factCheckResult}</p>
+              
+              <div className="text-gray-700 whitespace-pre-wrap mt-4">
+                <h3 className="text-sm font-semibold mb-2">Citations:</h3>
+                <ol className="list-decimal pl-5 space-y-2">
+                  {citations.map((result, index) => (
+                    <li key={index} className="ml-2 hover:text-blue-600 hover:underline transition-colors">
+                      <a href={result} target="_blank" rel="noopener noreferrer">{result}</a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : (
+        <p className="text-gray-500">
+          Highlight text on any webpage and right-click to fact check it.
+        </p>
+      )
+      }
+    </div >
           {isLoading ? (
             <div className="p-3 bg-yellow-50 rounded-lg">
               <p>Analyzing...</p>
