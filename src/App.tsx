@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { checkImage } from './action';
+import { SightEngineResponse } from './type';
 
 const App: React.FC = () => {
   const [selectedText, setSelectedText] = useState<string>('');
@@ -39,9 +41,47 @@ const App: React.FC = () => {
     }
   }, [isExtension]);
 
+  const [imageCheckResult, setImageCheckResult] = useState<SightEngineResponse>();
+  const [image, setImage] = useState("");
+  useEffect(() => {
+    // Connect to background script
+    const port = chrome.runtime.connect({ name: "popup" });
+
+    chrome.storage.local.get(['imageUrl'], (result) => {
+      if (result.imageUrl) {
+        setImage(result.imageUrl);
+        console.log(image);
+      }
+    });
+
+    // Cleanup
+    return () => {
+      port.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (image) {
+      const checkImageUrl = async () => {
+        const result = await checkImage(image);
+        if (result !== undefined) {
+          setImageCheckResult(result);
+        }
+      };
+      checkImageUrl();
+    }
+  }, [image]);
+
+  const handleImageCheck = async () => {
+    const result = await checkImage(image);
+    if (result !== undefined) {
+      setImageCheckResult(result);
+    }
+  };
+
   const handleFactCheck = async () => {
     if (!selectedText) return;
-    
+
     try {
       console.log('Fact checking:', selectedText);
       // Add your fact-checking logic here
@@ -61,14 +101,14 @@ const App: React.FC = () => {
   return (
     <div className="p-4 min-w-[300px] min-h-[300px]">
       <h1 className="text-xl font-bold mb-4">Fact Checker with the crew</h1>
-      
+
       {selectedText ? (
         <div className="space-y-4">
           <div className="p-3 bg-gray-100 rounded-lg">
             <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
             <p className="text-gray-700">{selectedText}</p>
           </div>
-          
+
           <button
             onClick={handleFactCheck}
             className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
@@ -80,6 +120,14 @@ const App: React.FC = () => {
         <p className="text-gray-500">
           Highlight text on any webpage and right-click to fact check it.
         </p>
+      )}
+      <button onClick={handleImageCheck}>Check Images</button>
+      {image && <img src={image} alt="Selected" />}
+      {imageCheckResult && (
+        <div>
+          <h3>Image Check Result:</h3>
+          <p>AI Generated: {imageCheckResult.type.ai_generated}</p>
+        </div>
       )}
 
       {/* Debug information */}

@@ -10,8 +10,8 @@ chrome.runtime.onInstalled.addListener(() => {
     });
     // Create a context menu item for images
     chrome.contextMenus.create({
-      id: "getImageLink",
-      title: "Get Image Link",
+      id: "AIImageDetect",
+      title: "Detect AI Generated Image",
       contexts: ["image"] // Only show for images
     });
   });
@@ -28,7 +28,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       chrome.action.openPopup();
     });
   }
-  if (info.menuItemId === "getImageLink" && info && info.srcUrl) {
+  if (info.menuItemId === "AIImageDetect" && info && info.srcUrl) {
     // Store only the current selection when context menu is used
     chrome.storage.local.set({
       imageUrl: info.srcUrl
