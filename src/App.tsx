@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ChatCompletion } from './types';
 import './index.css';
+import ReactMarkdown from 'react-markdown';
+
 
 
 const App: React.FC = () => {
@@ -136,8 +138,8 @@ const App: React.FC = () => {
 
 
               <h2 className="text-sm font-semibold mb-2">Fact Check Result:</h2>
-              <p className=' font-bold'>{firstWord}</p>
-              <p className="text-gray-700 whitespace-pre-wrap">{factCheckResult}</p>
+              <p className="text-gray-700 whitespace-pre-wrap">
+                <ReactMarkdown>{factCheckResult}</ReactMarkdown></p>
 
               <div className="text-gray-700 whitespace-pre-wrap mt-4">
                 <h3 className="text-sm font-semibold mb-2">Citations:</h3>
