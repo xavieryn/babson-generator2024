@@ -126,7 +126,7 @@ const App: React.FC = () => {
         if (result !== undefined && typeof result !== 'string') {
           setImageCheckResult(result);
         }
-        if(typeof result === 'string'){
+        if (typeof result === 'string') {
           return <div>Invalid Image Link</div>
         }
       };
@@ -210,9 +210,9 @@ const App: React.FC = () => {
       )}
       {
         image &&
-        <><div className="p-2 bg-gray-100 rounded-lg max-w-xs w-400 h-400">
+        <><div className="p-2 bg-gray-100 rounded-lg">
           <h2 className="text-sm font-semibold mb-2">Checking Images:</h2>
-          <img src={image} alt="Selected" className="max-w-full h-auto" />
+          <img src={image} alt="Selected" />
         </div></>
       }
       <div className="mt-4"></div>
