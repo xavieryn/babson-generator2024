@@ -8,13 +8,24 @@
         "default_title": "React Chrome Extension"
     },
     "permissions": [
-        "contextMenus"
+        "contextMenus",
+        "storage",
+        "activeTab"
     ],
     "background": {
         "service_worker": "background.js"
     },
-    "web_accessible_resources": [{
-        "resources": ["index.css"],
-        "matches": ["<all_urls>"]
-      }]
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "index.css"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    }
 }

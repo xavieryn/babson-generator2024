@@ -1,0 +1,1 @@
+chrome.runtime.onInstalled.addListener((()=>{chrome.contextMenus.create({id:"factCheck",title:"Fact Check This",contexts:["selection"]})})),chrome.contextMenus.onClicked.addListener(((e,t)=>{"factCheck"===e.menuItemId&&e.selectionText&&chrome.storage.local.set({selectedText:e.selectionText})}));
