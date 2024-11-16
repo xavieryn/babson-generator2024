@@ -1,4 +1,5 @@
 import { checkImage } from "./action";
+import './index.css';
 
 import { useState } from "react";
 import { SightEngineResponse } from "./type";
@@ -14,6 +15,7 @@ function App() {
   };
   return (
     <div className="App">
+      <div className="text-3xl">asdfasdf</div>
       Hello World
       <button onClick={handleClick}>Check Images</button>
       {imageCheckResult && (
