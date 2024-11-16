@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import { checkImage } from './action';
 import { SightEngineResponse } from './type';
 
 const App: React.FC = () => {
   const [selectedText, setSelectedText] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
-
+  const [isPending, startTransition] = useTransition();
   // Check if we're running as an extension
   const isExtension = typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id;
 
@@ -72,13 +72,6 @@ const App: React.FC = () => {
     }
   }, [image]);
 
-  const handleImageCheck = async () => {
-    const result = await checkImage(image);
-    if (result !== undefined) {
-      setImageCheckResult(result);
-    }
-  };
-
   const handleFactCheck = async () => {
     if (!selectedText) return;
 
@@ -121,12 +114,12 @@ const App: React.FC = () => {
           Highlight text on any webpage and right-click to fact check it.
         </p>
       )}
-      <button onClick={handleImageCheck}>Check Images</button>
       {image && <img src={image} alt="Selected" />}
       {imageCheckResult && (
         <div>
           <h3>Image Check Result:</h3>
-          <p>AI Generated: {imageCheckResult.type.ai_generated}</p>
+          {isPending && <div className="loader">Loading...</div>}
+          {!isPending && <p>AI Generated: {imageCheckResult.type.ai_generated}</p>}
         </div>
       )}
 
