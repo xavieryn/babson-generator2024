@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useTransition } from 'react';
 import { ChatCompletion } from './types';
+import './index.css';
 
 import { checkImage } from './action';
 import { SightEngineResponse } from './type';
@@ -60,7 +61,7 @@ const App: React.FC = () => {
   const handleSearch = async (text: string) => {
     setIsLoading(true);
     setError(null);
-    const Prompt = 'Please fact check this. Keep it a concise response and look for the newest and most reputable sources online. Make sure to keep it within the scope of the question. Please type "True", "Probably True", "Unknown" , "Probably False", or "Untrue" in the very start ';
+    const Prompt = 'Please fact check this. Keep it a concise response and look for the newest and most reputable sources online. Make sure to keep it within the scope of the question. If the question is opinionated, do not put your opinion and state that the prompt is an opinion and you cannot fact check it. Please type "True", "Probably True", "Unknown" , "Probably False", "Untrue", or "Opinion" in the very start. ';
     const PromptAndText = Prompt + text;
     const options = {
       method: 'POST',
@@ -69,7 +70,7 @@ const App: React.FC = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "llama-3.1-sonar-small-128k-online",
+        model: "llama-3.1-sonar-huge-128k-online",
         messages: [{ content: PromptAndText, role: "user" }]
       })
     };
@@ -147,60 +148,47 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="p-4 min-w-[300px] min-h-[300px]">
-      <h1 className="text-xl font-bold mb-4">Fact Checker</h1>
+    <div className="p-4 min-w-[800px] min-h-[600px] max-w-[1000px]">
+  <h1 className="text-xl font-bold mb-4">Fact Checker</h1>
 
-      {error ? (
-        <div className="p-3 bg-red-100 text-red-700 rounded-lg mb-4">
-          Error: {error}
+  {error ? (
+    <div className="p-3 bg-red-100 text-red-700 rounded-lg mb-4">
+      Error: {error}
+    </div>
+  ) : null}
+
+  {selectedText ? (
+    <div className="space-y-4">
+      <div className="p-3 bg-gray-100 rounded-lg">
+        <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
+        <p className="text-gray-700">{selectedText}</p>
+      </div>
+
+      {isLoading ? (
+        <div className="p-3 bg-yellow-50 rounded-lg">
+          <p>Analyzing...</p>
+        </div>
+      ) : factCheckResult ? (
+        <div className="p-3 bg-blue-50 rounded-lg">
+          <h2 className="text-sm font-semibold mb-2">Fact Check Result:</h2>
+          <p className="text-gray-700 whitespace-pre-wrap">{factCheckResult}</p>
+          <div className="text-gray-700 whitespace-pre-wrap mt-4">
+            <h3 className="text-sm font-semibold mb-2">Citations:</h3>
+            <ol className="list-decimal pl-5 space-y-2">
+              {citations.map((result, index) => (
+                <li key={index} className="ml-2">{result}</li>
+              ))}
+            </ol>
+          </div>
         </div>
       ) : null}
-
-      {selectedText ? (
-        <div className="space-y-4">
-          <div className="p-3 bg-gray-100 rounded-lg">
-            <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
-            <p className="text-gray-700">{selectedText}</p>
-          </div>
-
-          {isLoading ? (
-            <div className="p-3 bg-yellow-50 rounded-lg">
-              <p>Analyzing...</p>
-            </div>
-          ) : factCheckResult ? (
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <h2 className="text-sm font-semibold mb-2">Fact Check Result:</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{factCheckResult}</p>
-              <div className="text-gray-700 whitespace-pre-wrap">
-                <ol>
-                {citations.map((result, index) => (
-                  <li key={index}>{result}</li>
-                ))}
-                </ol>
-                <p className='text-5xl text-red-200'>asdfsdfsddsf</p>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      ) : (
-        <p className="text-gray-500">
-          Highlight text on any webpage and right-click to fact check it.
-        </p>
-      )}
-      {image && <img src={image} alt="Selected" />}
-      {imageCheckResult && (
-        <div>
-          <h3>Image Check Result:</h3>
-          {isPending && <div className="loader">Loading...</div>}
-          {!isPending && <p>AI Generated: {imageCheckResult.type.ai_generated}</p>}
-        </div>
-      )}
-
-      {/* Debug information */}
-      {/* <div className="mt-4 text-xs text-gray-500">
-        Extension ID: {chrome?.runtime?.id || 'Not available'}
-      </div> */}
     </div>
+  ) : (
+    <p className="text-gray-500">
+      Highlight text on any webpage and right-click to fact check it.
+    </p>
+  )}
+</div>
   );
 };
 
