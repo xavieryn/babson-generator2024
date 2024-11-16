@@ -226,18 +226,18 @@ const App: React.FC = () => {
       <div className="mt-4"></div>
       {
         imageCheckResult && (
-          <div className={`p-3 rounded-lg ${imageCheckResult.type.ai_generated < 0.25 ? 'bg-green-500' : imageCheckResult.type.ai_generated > 0.75 ? 'bg-red-500' : 'bg-yellow-500'}`}>
+          <div className={`p-3 rounded-lg ${imageCheckResult.type.ai_generated < 0.25 ? 'bg-green-500' : imageCheckResult.type.ai_generated > 0.50 ? 'bg-red-500' : 'bg-yellow-500'}`}>
             {isPending ? (
               <><ClipLoader color="#000" loading={isPending} size={35} /><p>Loading...</p></>
             ) : (
               <><h1 className="text-black whitespace-pre-wrap text-2xl">
                 {imageCheckResult.type.ai_generated < 0.25 ? 'Human Made' :
-                  imageCheckResult.type.ai_generated > 0.75 ? 'AI Generated' :
+                  imageCheckResult.type.ai_generated > 0.50 ? 'AI Generated' :
                     `Unknown (Score: ${imageCheckResult.type.ai_generated})`}
               </h1>
                 <h2>
                   {imageCheckResult.type.ai_generated < 0.25 ? ' This image appears to be human-made.' :
-                    imageCheckResult.type.ai_generated > 0.75 ? ' This image appears to be AI-generated.' :
+                    imageCheckResult.type.ai_generated > 0.50 ? ' This image appears to be AI-generated.' :
                       ' The authenticity of this image is unclear. Please review it carefully.'}
                 </h2></>
             )}
