@@ -1,10 +1,3 @@
-// Create a context menu item for images
-chrome.contextMenus.create({
-  id: "getImageLink",
-  title: "Get Image Link",
-  contexts: ["image"] // Only show for images
-});
-
 chrome.runtime.onInstalled.addListener(() => {
   // First remove existing menu items to avoid duplicates
   chrome.contextMenus.removeAll(() => {
@@ -13,6 +6,12 @@ chrome.runtime.onInstalled.addListener(() => {
       id: "factCheck",
       title: "Fact Check Selection",
       contexts: ["selection"]
+    });
+    // Create a context menu item for images
+    chrome.contextMenus.create({
+      id: "getImageLink",
+      title: "Get Image Link",
+      contexts: ["image"] // Only show for images
     });
   });
 });
