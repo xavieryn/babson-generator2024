@@ -160,7 +160,14 @@ const App: React.FC = () => {
     </div>
   ) : null} */}
 
-      {selectedText ? (
+      {!selectedText && !image &&
+        <p className="text-gray-500">
+          Highlight text on any webpage and right-click to fact check it.
+          Right click on images to check deep fake.
+        </p>
+      }
+
+      {selectedText && (
         <div className="space-y-4">
           <div className="p-3 bg-gray-100 rounded-lg">
             <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
@@ -172,19 +179,18 @@ const App: React.FC = () => {
               <p>Analyzing...</p>
             </div>
           ) : factCheckResult ? (
-            <div className={`p-3 rounded-lg ${
-              firstWord.toLowerCase() === 'true' ? 'bg-green-100' :
+            <div className={`p-3 rounded-lg ${firstWord.toLowerCase() === 'true' ? 'bg-green-100' :
               firstWord.toLowerCase() === 'probably true' ? 'bg-green-50' :
-              firstWord.toLowerCase() === 'untrue' ? 'bg-red-100' :
-              firstWord.toLowerCase() === 'probably false' ? 'bg-red-50' :
-              firstWord.toLowerCase() === 'unknown' ? 'bg-yellow-50' :
-              firstWord.toLowerCase() === 'opinion' ? 'bg-purple-50' :
-              'bg-blue-50' // default fallback
-            }`}>
+                firstWord.toLowerCase() === 'untrue' ? 'bg-red-100' :
+                  firstWord.toLowerCase() === 'probably false' ? 'bg-red-50' :
+                    firstWord.toLowerCase() === 'unknown' ? 'bg-yellow-50' :
+                      firstWord.toLowerCase() === 'opinion' ? 'bg-purple-50' :
+                        'bg-blue-50' // default fallback
+              }`}>
               <p>{firstWord}</p>
               <h2 className="text-sm font-semibold mb-2">Fact Check Result:</h2>
               <p className="text-gray-700 whitespace-pre-wrap">{factCheckResult}</p>
-              
+
               <div className="text-gray-700 whitespace-pre-wrap mt-4">
                 <h3 className="text-sm font-semibold mb-2">Citations:</h3>
                 <ol className="list-decimal pl-5 space-y-2">
@@ -198,57 +204,27 @@ const App: React.FC = () => {
             </div>
           ) : null}
         </div>
-      ) : (
-        <p className="text-gray-500">
-          Highlight text on any webpage and right-click to fact check it.
-        </p>
-      )
-      }
-    </div >
-          {isLoading ? (
-            <div className="p-3 bg-yellow-50 rounded-lg">
-              <p>Analyzing...</p>
-            </div>
-          ) : factCheckResult ? (
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <h2 className="text-sm font-semibold mb-2">Fact Check Result:</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{factCheckResult}</p>
-              <div className="text-gray-700 whitespace-pre-wrap mt-4">
-                <h3 className="text-sm font-semibold mb-2">Citations:</h3>
-                <ol className="list-decimal pl-5 space-y-2">
-                  {citations.map((result, index) => (
-                    <li key={index} className="ml-2">{result}</li>
-                  ))}
-                </ol>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      ) : (
-        !image &&
-        <p className="text-gray-500">
-          Highlight text on any webpage and right-click to fact check it.
-          Right click on images to check deep fake.
-        </p>
       )}
-
-      {image &&
+      {
+        image &&
         <div>
           <h2 className="text-sm font-semibold mb-2">Checking Images:</h2>
           <img src={image} alt="Selected" />
         </div>
       }
-      {imageCheckResult && (
-        <div>
-          <h3>Image Check Result:</h3>
-          {isPending ? (
-            <><ClipLoader color="#000" loading={isPending} size={35} /><p>Loading...</p></>
-          ) : (
-            <pre>{imageCheckResult.type.ai_generated}</pre>
-          )}
-        </div>
-      )}
-    </div>
+      {
+        imageCheckResult && (
+          <div>
+            <h3>Image Check Result:</h3>
+            {isPending ? (
+              <><ClipLoader color="#000" loading={isPending} size={35} /><p>Loading...</p></>
+            ) : (
+              <pre>{imageCheckResult.type.ai_generated}</pre>
+            )}
+          </div>
+        )
+      }
+    </div >
   );
 };
 
