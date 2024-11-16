@@ -4,10 +4,10 @@ import { SightEngineResponse } from './type';
 
 const apiUser = '527050385';
 const apiSecret = 'DpYFg6icij6tCWu9S4HZSJQjnfp3QBzq';
-const imageUrl = 'https://images.deepai.org/machine-learning-models/b6dcce965af54c26918924813f3cd288/cyborg.jpg';
+// const imageUrl = 'https://images.deepai.org/machine-learning-models/b6dcce965af54c26918924813f3cd288/cyborg.jpg';
 
 
-export async function checkImage() {
+export async function checkImage(imageUrl: string) {
     try {
         const response: AxiosResponse<SightEngineResponse> = await axios.get('https://api.sightengine.com/1.0/check.json', {
             params: {
