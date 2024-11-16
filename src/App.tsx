@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useTransition } from 'react';
 import { ChatCompletion } from './types';
 import './index.css';
-
+import { ClipLoader } from 'react-spinners';
 import { checkImage } from './action';
 import { SightEngineResponse } from './type';
 
@@ -191,11 +191,20 @@ const App: React.FC = () => {
         </p>
       )}
 
-      {image && <img src={image} alt="Selected" />}
+      {image &&
+        <div>
+          <h2 className="text-sm font-semibold mb-2">Checking Images:</h2>
+          <img src={image} alt="Selected" />
+        </div>
+      }
       {imageCheckResult && (
         <div>
           <h3>Image Check Result:</h3>
-          <pre>{imageCheckResult.type.ai_generated}</pre>
+          {isPending ? (
+            <><ClipLoader color="#000" loading={isPending} size={35} /><p>Loading...</p></>
+          ) : (
+            <pre>{imageCheckResult.type.ai_generated}</pre>
+          )}
         </div>
       )}
     </div>
