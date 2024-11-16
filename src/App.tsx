@@ -157,7 +157,7 @@ const App: React.FC = () => {
         </div>
       ) : null}
 
-      {selectedText ? (
+      {(selectedText) ? (
         <div className="space-y-4">
           <div className="p-3 bg-gray-100 rounded-lg">
             <h2 className="text-sm font-semibold mb-2">Selected Text:</h2>
@@ -184,8 +184,10 @@ const App: React.FC = () => {
           ) : null}
         </div>
       ) : (
+        !image &&
         <p className="text-gray-500">
           Highlight text on any webpage and right-click to fact check it.
+          Right click on images to check deep fake.
         </p>
       )}
 
